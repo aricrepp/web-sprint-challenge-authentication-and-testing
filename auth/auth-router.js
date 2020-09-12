@@ -10,6 +10,12 @@ router.post('/register', async (req, res, next) => {
     const { username, password } = req.body;
     const user = await Users.findBy({ username }).first();
 
+    if (!req.body.password) {
+      return res.status(401).json({
+        message: 'password required',
+      });
+    }
+
     if (user) {
       return res.status(409).json({
         message: 'Username taken',
@@ -60,6 +66,7 @@ router.post('/login', async (req, res, next) => {
 
     res.json({
       message: `Welcome ${user.username}!`,
+      token,
     });
   } catch (err) {
     next(err);
